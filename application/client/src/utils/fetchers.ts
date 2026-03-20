@@ -1,7 +1,17 @@
 import $ from "jquery";
 import { gzip } from "pako";
 
+let binaryTransportLoaded = false;
+async function ensureBinaryTransportLoaded(): Promise<void> {
+  if (binaryTransportLoaded) return;
+  await import("jquery-binarytransport");
+  binaryTransportLoaded = true;
+}
+
 export async function fetchBinary(url: string): Promise<ArrayBuffer> {
+  // `jquery-binarytransport` はデータ種別 `binary` を扱うためのトランスポート追加なので、
+  // 最初に `fetchBinary` が呼ばれたタイミングでのみ読み込みます
+  await ensureBinaryTransportLoaded();
   const result = await $.ajax({
     async: false,
     dataType: "binary",
