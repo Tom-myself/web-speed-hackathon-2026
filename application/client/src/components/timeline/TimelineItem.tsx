@@ -55,8 +55,6 @@ export const TimelineItem = ({ post }: Props) => {
             to={`/users/${post.user.username}`}
           >
             <img
-              width={64}
-              height={64}
               alt={post.user.profileImage.alt}
               src={getProfileImagePath(post.user.profileImage.id)}
                 loading="lazy"          // プロフィール画像は優先度を下げて遅延読み込み
