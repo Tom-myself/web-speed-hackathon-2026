@@ -56,7 +56,7 @@ export const AppContainer = () => {
       .catch(() => {
         setActiveUser(null);
       });
-  }, [setActiveUser]);
+  }, []);
   const handleLogout = useCallback(async () => {
     await sendJSON("/api/v1/signout", {});
     setActiveUser(null);

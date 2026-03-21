@@ -85,7 +85,7 @@ export function useInfiniteFetch<T>(
     });
 
     fetchMore();
-  }, [fetchMore]);
+  }, []);
 
   return {
     ...result,
