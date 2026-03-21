@@ -25,39 +25,39 @@ export const CoveredImage = ({ src, loading = "lazy", fetchPriority = "auto" }: 
   const [shouldParseExif, setShouldParseExif] = useState(false);
   const [isExifParsed, setIsExifParsed] = useState(false);
 
-  // useEffect(() => {
-  //   if (!shouldParseExif || isExifParsed) return;
-  //   setIsExifParsed(true);
+  useEffect(() => {
+    if (!shouldParseExif || isExifParsed) return;
+    setIsExifParsed(true);
 
-  //   const schedule = (cb: () => void) => {
-  //     if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-  //       (window as unknown as { requestIdleCallback: (fn: () => void) => void }).requestIdleCallback(cb);
-  //     } else {
-  //       setTimeout(cb, 0);
-  //     }
-  //   };
+    const schedule = (cb: () => void) => {
+      if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+        (window as unknown as { requestIdleCallback: (fn: () => void) => void }).requestIdleCallback(cb);
+      } else {
+        setTimeout(cb, 0);
+      }
+    };
 
-  //   schedule(() => {
-  //     void (async () => {
-  //       try {
-  //         const mod = await import("piexifjs");
-  //         const { load, ImageIFD } = mod as typeof import("piexifjs");
+    schedule(() => {
+      void (async () => {
+        try {
+          const mod = await import("piexifjs");
+          const { load, ImageIFD } = mod as typeof import("piexifjs");
 
-  //         const resp = await fetch(src, { method: "GET" });
-  //         if (!resp.ok) return;
+          const resp = await fetch(src, { method: "GET" });
+          if (!resp.ok) return;
 
-  //         const buf = await resp.arrayBuffer();
-  //         const exif = load(Buffer.from(buf).toString("binary"));
-  //         const raw = exif?.["0th"]?.[ImageIFD.ImageDescription];
-  //         const decoded =
-  //           raw != null ? new TextDecoder().decode(Buffer.from(raw, "binary")) : "";
-  //         setAlt(decoded);
-  //       } catch {
-  //         // ALT は空でも致命ではない
-  //       }
-  //     })();
-  //   });
-  // }, [isExifParsed, shouldParseExif, src]);
+          const buf = await resp.arrayBuffer();
+          const exif = load(Buffer.from(buf).toString("binary"));
+          const raw = exif?.["0th"]?.[ImageIFD.ImageDescription];
+          const decoded =
+            raw != null ? new TextDecoder().decode(Buffer.from(raw, "binary")) : "";
+          setAlt(decoded);
+        } catch {
+          // ALT は空でも致命ではない
+        }
+      })();
+    });
+  }, [isExifParsed, shouldParseExif, src]);
 
   return (
     // 親に aspect-ratio を指定してブラウザがすぐレイアウトを決定できる
